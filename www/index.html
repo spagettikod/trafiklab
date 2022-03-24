@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/vue.global.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+
+<body>
+    <div id="app" class="container p-5">
+        <h2>Topp 10 busslinjer med flest hållplatser</h2>
+        <div v-for="(line, objKey) in lines" class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#item-${line.lineNumber}`"
+                    aria-expanded="false" aria-controls="collapseOne">
+                    <strong>{{ objKey + 1 }}.</strong>&nbsp;Linje {{ line.lineDesignation }}
+                </button>
+            </h2>
+            <div :id="`item-${line.lineNumber}`" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div v-for="stop in line.stops">
+                        {{ stop.StopPointName }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    lines: []
+                }
+            },
+            beforeMount: function () {
+                var me = this;
+                fetch('/api')
+                    .then(response => response.json())
+                    .then(data => this.lines = data);
+            }
+        }).mount('#app')
+    </script>
+    <script src="js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
